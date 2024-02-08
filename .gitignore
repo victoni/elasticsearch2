@@ -1,0 +1,6 @@
+elasticApp/
+notes.txt
+__pycache__
+start.sh
+.env
+database.db
