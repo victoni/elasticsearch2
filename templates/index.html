@@ -83,7 +83,11 @@ form {
     </style>
 </head>
 <body>
-    <h1>Elastic(search²)</h1>
+    {% if results %}
+        <img src="{{url_for('static', filename='es2.png')}}" align="middle" style="width:300px;height:198px;"/>
+    {% else %}
+        <img src="{{url_for('static', filename='es2.png')}}" align="middle"/>
+    {% endif %}
 
     <form method="POST">
         <label for="country">Select a country:</label>
@@ -94,6 +98,11 @@ form {
         </select>
         <button type="submit">Search</button>
     </form>
+
+    {% if error_msg %}
+        <h1>Error!</h1>
+        <h3>{{ error_msg }}</h3>
+    {% endif %}
 
     {% if results %}
         <h2>Results: {{ num_results }}</h2>
@@ -106,6 +115,14 @@ form {
                         <pre>{{ body }}</pre>
                     </li>                
             {% endfor %}
+        </ul>
+        <h2>Export to JSON</h2>
+        <ul>
+                <li>
+                    <form method="GET" action="./export/json">
+                        <button type="submit" onclick=' window.open("./export/json","_blank"); return false;'>Export</button>
+                    </form>
+                </li>          
         </ul>
     {% endif %}
 </body>
