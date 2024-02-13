@@ -17,6 +17,11 @@ Not going to lie, a good percentage of this project was initially written by AI.
 - AI generated logo (I'm still hyped about it).
 - It currently looks only for hosts that contain GB of data. But this can of course be tweaked.
 
+## Usage
+1. Rename `.env.1` to `.env`
+2. Put your Shodan API in `.env`
+3. Run `flask --app elasticApp run`
+
 ## TODO
 Things/ideas to develop. Feel free to create a Pull Request!
 
