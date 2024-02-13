@@ -30,6 +30,7 @@ def index():
 	error = False
 	results = []
 	error_msg = 'Try again!'
+	keywords = {"user":0, "password":0, "admin":0, "invoice":0, "order":0, "receipt":0, "resumes":0, "citizen":0}
 
 	if request.method == 'POST':
 		
@@ -44,9 +45,16 @@ def index():
 		
 		if results:
 			session['json_data'] = dict(results)
+			num_results = len(results)
+			for keyword in keywords:
+				for body in results:
+					if keyword in body[1]:
+						keywords[keyword] += 1
+
+
 		
 			print("Time for the whole thing: " + str(timer() - time_before))
-			return render_template('index.html', countries=countries, selected_country=selected_country, results=results, error=error)
+			return render_template('index.html', countries=countries, num_results=num_results, keywords=keywords, selected_country=selected_country, results=results, error=error)
 
 	return render_template('index.html', countries=countries, num_results=num_results, error=error)
 
@@ -118,7 +126,7 @@ def get_shodan_results(country_code):
 		status = ''
 		try:
 			response = r.get(url, headers=headers, timeout=5)
-			status = response.status_code
+			status, body = response.status_code, response.text
 			
 			# If they are alive and reachable
 			if status == 200:
@@ -126,15 +134,16 @@ def get_shodan_results(country_code):
 				# write the new hosts into the DB
 				insert_into_database(host,country_code)
 				
-				# add to the shodan query result list
-				new_hosts.append(url)
+				# add to results
+				end_results.append((url,body))
 		except Exception as e:
-			#print(e)
 			if status:
 				print("{} - {}".format(url,status))
 			else:
 				print("{} - {}".format(url,e))
 
+	# No need for re-parsing
+	'''
 	# Get the content of the new hosts
 	for url in new_hosts:
 		headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
@@ -146,7 +155,7 @@ def get_shodan_results(country_code):
 				end_results.append((url,body))
 		except:
 			pass
-
+	'''
 	return end_results
 
 if __name__ == '__main__':

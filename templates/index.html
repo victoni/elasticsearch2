@@ -18,8 +18,26 @@
     min-height: 100vh;
 }
 
-h1, h2 {
+h1 {
     color: #333;
+}
+
+h2 {
+    margin-bottom: 20px;
+    /*border: 1px solid #ddd;*/
+    padding: 10px;
+    display: flex;
+    /*background-color: #fff;*/
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: center;
+    width: 80%; /* Adjusted width for better responsiveness */
+    margin-top: 20px; /* Add some top margin to create space between h2 and ul */
+    justify-content: space-between;
+}
+
+h2 span {
+        width: 48%; /* Adjust the width for each column (leave some gap for spacing) */
 }
 
 form {
@@ -56,7 +74,7 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -50px; /* Adjusted margin-top to position above the middle */
+    margin-top: 20px; /* Adjusted margin-top to create space between ul and h2 */
 }
 
 li {
@@ -106,6 +124,11 @@ form {
 
     {% if results %}
         <h2>Results: {{ num_results }}</h2>
+        {% if keywords %}
+            {% for key, value in keywords.items() %}
+                <p>{{ key }}: {{ value }}</p>
+            {% endfor %}
+        {% endif %}
         <ul>
             {% for url, body in results %}
                     <li>
@@ -116,7 +139,7 @@ form {
                     </li>                
             {% endfor %}
         </ul>
-        <h2>Export to JSON</h2>
+        <h1>Export to JSON</h1>
         <ul>
                 <li>
                     <form method="GET" action="./export/json">
