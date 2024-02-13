@@ -1,4 +1,7 @@
-# Elastic(search²)
+<p align="center">
+  <img src="./static/es2-white.png" />
+</p>
+
 Elasticsearch hosts are easily misconfigured. Although mostly used for storing logs and mointoring data, organizations use it also as a databse-type instance for any sort of data (it is a database after all). Elastic(search²) is an Elasticsearch host aggregator from various search engines for discovering leaks.
 
 Elastic(search²) is a small tool for discovering Elasticsearch hosts from various search engines (Shodan so far) based on the country they are hosted in.
