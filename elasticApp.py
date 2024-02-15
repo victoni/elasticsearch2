@@ -7,6 +7,7 @@ from timeit import default_timer as timer
 import sqlite3
 from dotenv import load_dotenv
 from os import getenv
+from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 
@@ -68,13 +69,60 @@ def summary():
 		counter += 1
 	return jsonify(dict_results)
 
-
 def get_db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = lambda cursor, row: row[0]
     c = conn.cursor()
     return c
 
+def fetch_host_id(host):
+	hostid = ''
+	cursor = get_db_connection()
+	url = "http://{}/_cat/indices?v".format(host)
+	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
+	try:
+		response = r.get(url, headers=headers, timeout=5)
+		status = response.status_code
+
+		if status != 200:
+			hostid = cursor.execute('select id from elastic where host = "{}"'.format(host)).fetchall()[0]
+			print(hostid)
+			return hostid
+	except Exception as e:
+		hostid = cursor.execute('select id from elastic where host = "{}"'.format(host)).fetchall()[0]
+		print(hostid)
+		return hostid
+
+def delete_from_database(id):
+    # Connect to the SQLite database
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Insert data into the table
+    cursor.execute('DELETE FROM elastic WHERE id = ?', (id,))
+
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+
+@app.route("/cleanup", methods=['GET'])
+def cleanup():
+	cursor = get_db_connection()
+	hosts_in_database = cursor.execute("select host from elastic").fetchall()
+	to_delete = []
+	num_threads = min(10, len(hosts_in_database))
+	with ThreadPoolExecutor(max_workers=num_threads) as executor:
+		to_delete = executor.map(fetch_host_id, hosts_in_database)
+	
+	for id in to_delete:
+		if id is not None:
+			print("Deleting {}".format(id))
+			try:
+				delete_from_database(id)
+			except Exception as e:
+				print(f"Error deleting row with id {id}: {e}")
+
+	return render_template('cleanup.html')
 
 def insert_into_database(host, country):
     # Connect to the SQLite database
@@ -142,20 +190,6 @@ def get_shodan_results(country_code):
 			else:
 				print("{} - {}".format(url,e))
 
-	# No need for re-parsing
-	'''
-	# Get the content of the new hosts
-	for url in new_hosts:
-		headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
-		try:
-			response = r.get(url, headers=headers, timeout=5)
-			status, body = response.status_code, response.text
-
-			if status == 200:
-				end_results.append((url,body))
-		except:
-			pass
-	'''
 	return end_results
 
 if __name__ == '__main__':

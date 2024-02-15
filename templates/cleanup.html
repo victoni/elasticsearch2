@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elastic(search²)</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #333;
+}
+
+h2 {
+    margin-bottom: 20px;
+    /*border: 1px solid #ddd;*/
+    padding: 10px;
+    display: flex;
+    /*background-color: #fff;*/
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: center;
+    width: 80%; /* Adjusted width for better responsiveness */
+    margin-top: 20px; /* Add some top margin to create space between h2 and ul */
+    justify-content: space-between;
+}
+
+h2 span {
+        width: 48%; /* Adjust the width for each column (leave some gap for spacing) */
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-weight: bold;
+}
+
+select, button {
+    padding: 8px;
+    margin: 5px; /* Added margin for better spacing */
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Adjusted margin-top to create space between ul and h2 */
+}
+
+li {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    width: 80%; /* Adjusted width for better responsiveness */
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 10px;
+}
+
+/* Additional style to center the form horizontally */
+form {
+    max-width: 400px; /* Adjusted max-width for better responsiveness */
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+    <img src="{{url_for('static', filename='es2.png')}}" align="middle"/>
+
+    <h1>Cleanup done!</h1>
+    <input name="action" onclick="history.back()" type="submit" value="Go back"/>
+
+</body>
+</html>
