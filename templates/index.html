@@ -117,9 +117,13 @@ form {
         <button type="submit">Search</button>
     </form>
 
+     <form method="GET" action="{{ url }}/cleanup">
+        <button name="cleanup" type="submit">Cleanup</button>
+    </form>
+
     {% if error_msg %}
         <h1>Error!</h1>
-        <h3>{{ error_msg }}</h3>
+        <h3>{{ error_msg }}. Try Again.</h3>
     {% endif %}
 
     {% if results %}

@@ -27,7 +27,7 @@ Things/ideas to develop. Feel free to create a Pull Request!
 
 - [ ] (Properly) Export to JSON
 	- For each search, each session (stuck at the first search of each session)
-- [ ] Add content analysis based on keywords ("users", "orders", "invoices" etc.)
+- [x] Add content analysis based on keywords ("users", "orders", "invoices" etc.)
 - [ ] Add more search engines (Censys)
 - [ ] Add a "cleanup" function
 	- To remove hosts from the database that are now unreachable
