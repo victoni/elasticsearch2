@@ -31,5 +31,6 @@ Things/ideas to develop. Feel free to create a Pull Request!
 - [ ] Add more search engines (Censys)
 - [x] Add a "cleanup" function
 	- To remove hosts from the database that are now unreachable
+- [x] Add multithreading
 - [ ] Debug logs export
 - [ ] Dockerize

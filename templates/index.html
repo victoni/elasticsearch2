@@ -98,6 +98,26 @@ form {
     width: 100%;
 }
 
+.keyword-table {
+    width: 80%; /* Adjust the width as needed */
+    margin-top: 20px; /* Add margin for spacing */
+    border-collapse: collapse;
+}
+
+.keyword-table th, .keyword-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.keyword-table th {
+    background-color: #f2f2f2; /* Header background color */
+}
+
+.keyword-table td {
+    background-color: #fff; /* Cell background color */
+}
+
     </style>
 </head>
 <body>
@@ -128,10 +148,24 @@ form {
 
     {% if results %}
         <h2>Results: {{ num_results }}</h2>
-        {% if keywords %}
+        <!--{% if keywords %}
             {% for key, value in keywords.items() %}
                 <p>{{ key }}: {{ value }}</p>
             {% endfor %}
+        {% endif %}-->
+        {% if keywords %}
+        <table class="keyword-table">
+            <tr>
+                <th>Keyword</th>
+                <th>Number of bodies appeared in</th>
+            </tr>
+            {% for key, value in keywords.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </table>
         {% endif %}
         <ul>
             {% for url, body in results %}

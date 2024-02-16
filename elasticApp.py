@@ -31,7 +31,7 @@ def index():
 	error = False
 	results = []
 	error_msg = 'Try again!'
-	keywords = {"user":0, "password":0, "admin":0, "invoice":0, "order":0, "receipt":0, "resumes":0, "citizen":0}
+	keywords = {"user":0, "password":0, "admin":0, "invoice":0, "order":0, "receipt":0, "resumes":0, "citizen":0, "credential":0}
 
 	if request.method == 'POST':
 		
@@ -137,6 +137,25 @@ def insert_into_database(host, country):
     conn.commit()
     conn.close()
 
+def fetch_url(host):
+	url = "http://{}/_cat/indices?v".format(host)
+	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
+	status = ''
+	try:
+		response = r.get(url, headers=headers, timeout=5)
+		status, body = response.status_code, response.text
+		
+		# If they are alive and reachable
+		if status == 200:
+			
+			# add to results
+			return (url,body), host
+	except Exception as e:
+		if status:
+			print("{} - {}".format(url,status))
+		else:
+			print("{} - {}".format(url,e))
+
 def get_shodan_results(country_code):
 	print('Hi!')
 	country_code = country_code.lower()
@@ -155,10 +174,6 @@ def get_shodan_results(country_code):
 	# for anew
 	hosts_in_database = cursor.execute("select host from elastic where country is '{}'".format(country_code)).fetchall()
 
-	# DEBUG
-	print("hosts_in_database:")
-	print(hosts_in_database)
-
 
 	# grab all IPv4 from the query results
 	for result in results['matches']:
@@ -167,28 +182,20 @@ def get_shodan_results(country_code):
 			hosts.append(host)
 
 	hosts_not_in_database = list(set(hosts) - set(hosts_in_database))
+	
+	# DEBUG
+	print("hosts_not_in_database")
+	print(hosts_not_in_database)
 
-	for host in hosts_not_in_database:
-		url = "http://{}/_cat/indices?v".format(host)
-		headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
-		status = ''
-		try:
-			response = r.get(url, headers=headers, timeout=5)
-			status, body = response.status_code, response.text
-			
-			# If they are alive and reachable
-			if status == 200:
-				
-				# write the new hosts into the DB
-				insert_into_database(host,country_code)
-				
-				# add to results
-				end_results.append((url,body))
-		except Exception as e:
-			if status:
-				print("{} - {}".format(url,status))
-			else:
-				print("{} - {}".format(url,e))
+	#thread_results = []
+	num_threads = min(10, len(hosts_not_in_database))
+	with ThreadPoolExecutor(max_workers=num_threads) as executor:
+		thread_results = executor.map(fetch_url, hosts_not_in_database)
+
+	for result in thread_results:
+		if result is not None:
+			end_results.append(result[0])
+			insert_into_database(result[1],country_code)
 
 	return end_results
 
