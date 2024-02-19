@@ -17,7 +17,7 @@ load_dotenv()
 # Shodan API key (replace 'YOUR_SHODAN_API_KEY' with your actual API key)
 SHODAN_API_KEY = getenv('SHODAN_API_KEY')
 api = shodan.Shodan(SHODAN_API_KEY)
-app.secret_key = getenv('FLASK_SECRET_KEY')
+app.secret_key = 'b332ac5ec3f95e6913e3a76eb5d38891'
 #json_results = 'json_results'
 
 # IPv4 pattern recognition
