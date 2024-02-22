@@ -20,7 +20,19 @@ Not going to lie, a good percentage of this project was initially written by AI.
 ## Usage
 1. Rename `.env.1` to `.env`
 2. Put your Shodan API in `.env`
-3. Run `flask --app elasticApp run`
+3. Rename `database-rename.db` to `database.db`
+
+### If running locally
+4. `flask --app elasticApp run`
+
+### If building on Docker
+4. `docker build -t elasticsearch2 .`
+5. `docker run -v ./database.db:/app/database.db --network host -p 5000:5000 elasticsearch2:latest`
+
+Then visit `http://127.0.0.1:5000`.
+
+## Keywords
+In `keywords.txt` you can put the words you want Elastic(search²) to identify in hosts' indices, one keyword per line.
 
 ## TODO
 Things/ideas to develop. Feel free to create a Pull Request!
@@ -33,4 +45,4 @@ Things/ideas to develop. Feel free to create a Pull Request!
 	- To remove hosts from the database that are now unreachable
 - [x] Add multithreading
 - [ ] Debug logs export
-- [ ] Dockerize
+- [x] Dockerize

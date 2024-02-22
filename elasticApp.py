@@ -18,7 +18,6 @@ load_dotenv()
 SHODAN_API_KEY = getenv('SHODAN_API_KEY')
 api = shodan.Shodan(SHODAN_API_KEY)
 app.secret_key = 'b332ac5ec3f95e6913e3a76eb5d38891'
-#json_results = 'json_results'
 
 # IPv4 pattern recognition
 ipv4_pattern = re.compile(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]+\b')
@@ -31,14 +30,16 @@ def index():
 	error = False
 	results = []
 	error_msg = 'Try again!'
-	keywords = {"user":0, "password":0, "admin":0, "invoice":0, "order":0, "receipt":0, "resumes":0, "citizen":0, "credential":0}
+	keywords = {}
+
+	with open('keywords.txt','r') as keywords_file:
+		words = keywords_file.readlines()
+		for word in words:
+			keywords[word.strip('\n')] = 0
 
 	if request.method == 'POST':
-		
 		selected_country = request.form.get('country')
-
 		time_before = timer()
-		
 		try:
 			results = get_shodan_results(selected_country)
 		except Exception as e:
@@ -52,8 +53,6 @@ def index():
 					if keyword in body[1]:
 						keywords[keyword] += 1
 
-
-		
 			print("Time for the whole thing: " + str(timer() - time_before))
 			return render_template('index.html', countries=countries, num_results=num_results, keywords=keywords, selected_country=selected_country, results=results, error=error)
 
@@ -187,10 +186,11 @@ def get_shodan_results(country_code):
 	print("hosts_not_in_database")
 	print(hosts_not_in_database)
 
-	#thread_results = []
+	thread_results = []
 	num_threads = min(10, len(hosts_not_in_database))
-	with ThreadPoolExecutor(max_workers=num_threads) as executor:
-		thread_results = executor.map(fetch_url, hosts_not_in_database)
+	if num_threads != 0:
+		with ThreadPoolExecutor(max_workers=num_threads) as executor:
+			thread_results = executor.map(fetch_url, hosts_not_in_database)
 
 	for result in thread_results:
 		if result is not None:
