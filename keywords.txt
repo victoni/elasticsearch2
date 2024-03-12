@@ -7,3 +7,8 @@ receipt
 resume
 citizen
 credential
+ssn
+medical
+document
+token
+request
