@@ -104,6 +104,36 @@ def delete_from_database(id):
     conn.commit()
     conn.close()
 
+# Keyword analysis on indices (if hey contain JWTs, or anything)
+@app.route("/index", methods=['GET'])
+def indices_analysis():
+	#words = ['eyJ', 'token', 'password', 'address', 'fullname', 'full_name', 'phone', 'mobile' 'firstname', 'first_name', 'lastname', 'last_name', 'street']
+	words = []
+	with open('indices_keywords.txt','r') as keywords_file:
+		for word in keywords_file.readlines():
+			words.append(word.replace('\n',''))
+	target = request.args.get('target')
+	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0'}
+	results = {}
+	indices = r.get(target, headers=headers).text.split()[12::10]
+	for index in indices:
+		results[index] = []
+	
+	index_response = ''
+	for index in indices:
+		index_response = r.get(target.split('_')[0] + index + '/_search?size=500', headers=headers).text
+		for  word in words:
+			if word in index_response:
+				results[index].append(word)
+
+	for element in list(results):
+		if len(results[element]) < 1:
+			results.pop(element)
+
+	print(results)
+	return render_template('indices.html', results=results, host=target.split('_')[0])
+
+
 @app.route("/cleanup", methods=['GET'])
 def cleanup():
 	cursor = get_db_connection()

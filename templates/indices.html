@@ -127,67 +127,21 @@ form {
         <img src="{{url_for('static', filename='es2.png')}}" align="middle"/>
     {% endif %}
 
-    <form method="POST">
-        <label for="country">Select a country:</label>
-        <select name="country" id="country">
-            {% for country in countries %}
-                <option value="{{ country.code }}" {% if country.code == selected_country %}selected{% endif %}>{{ country.name }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Search</button>
-    </form>
-
-     <form method="GET" action="{{ url }}/cleanup">
-        <button name="cleanup" type="submit">Cleanup</button>
-    </form>
-
-    {% if error_msg %}
-        <h1>Error!</h1>
-        <h3>{{ error_msg }}. Try Again.</h3>
-    {% endif %}
+    <h2>Results for {{ host }}</h2>
 
     {% if results %}
-        <h2>Results: {{ num_results }}</h2>
-        <!--{% if keywords %}
-            {% for key, value in keywords.items() %}
-                <p>{{ key }}: {{ value }}</p>
-            {% endfor %}
-        {% endif %}-->
-        {% if keywords %}
         <table class="keyword-table">
             <tr>
                 <th>Keyword</th>
                 <th>Number of bodies appeared in</th>
             </tr>
-            {% for key, value in keywords.items() %}
+            {% for key, value in results.items() %}
                 <tr>
-                    <td>{{ key }}</td>
+                    <td><a href="{{ host }}{{ key }}/_search?size=500">{{ key }}</a></td>
                     <td>{{ value }}</td>
                 </tr>
             {% endfor %}
         </table>
-        {% endif %}
-        <ul>
-            {% for host, body in results %}
-                    <li>
-                        <form method="GET" action="{{ host }}">
-                            <button type="submit" onclick=' window.open("{{ host }}","_blank"); return false;'>{{ host }}</button>
-                        </form>
-                        <form method="GET" action="{{ host }}/indices">
-                            <button type="submit" onclick=' window.open("{{ url }}/index?target={{ host }}","_blank"); return false;'>Index analysis</button>
-                        </form>
-                        <pre>{{ body }}</pre>
-                    </li>                
-            {% endfor %}
-        </ul>
-        <h1>Export to JSON</h1>
-        <ul>
-                <li>
-                    <form method="GET" action="./export/json">
-                        <button type="submit" onclick=' window.open("./export/json","_blank"); return false;'>Export</button>
-                    </form>
-                </li>          
-        </ul>
     {% endif %}
 </body>
 </html>
