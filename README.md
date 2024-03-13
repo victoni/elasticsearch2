@@ -32,7 +32,11 @@ Not going to lie, a good percentage of this project was initially written by AI.
 Then visit `http://127.0.0.1:5000`.
 
 ## Keywords
-In `keywords.txt` you can put the words you want Elastic(search²) to identify in hosts' indices, one keyword per line.
+In `keywords.txt` you can put the words you want Elastic(search²) to identify in hosts' index names, one keyword per line.
+
+In `indices_keywords.txt` you can put the words you want Elastic(search²) to identify inside each index of the given host, one keyword per line.
+
+![indices_keywords screenshot](./static/indices_keywords.png)
 
 ## TODO
 Things/ideas to develop. Feel free to create a Pull Request!
