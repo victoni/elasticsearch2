@@ -50,3 +50,5 @@ Things/ideas to develop. Feel free to create a Pull Request!
 - [x] Add multithreading
 - [ ] Debug logs export
 - [x] Dockerize
+
+[![Bitcrack Cyber Security](https://static.wixstatic.com/media/37b039_1b93f812f82e4d608de8f3df1a0bc829~mv2.png/v1/fill/w_415,h_134,al_c,lg_1,q_85,enc_auto/bcs-e1525171169680.png)](https://www.bitcrack.net/)
