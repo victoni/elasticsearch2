@@ -51,6 +51,6 @@ Things/ideas to develop. Feel free to create a Pull Request!
 - [ ] Debug logs export
 - [x] Dockerize
 
-Sponsored by:
+### Sponsored by:
 
 [![Bitcrack Cyber Security](bc.png)](https://www.bitcrack.net/)
